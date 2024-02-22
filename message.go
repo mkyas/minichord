@@ -26,7 +26,7 @@ func ReceiveMiniChordMessage(conn net.Conn) (message *MiniChord, err error) {
 		log.Printf("ReceivedMiniChordMessage() length error: %d\n", length)
 		return
 	}
-	numBytes := uint64(binary.BigEndian.Uint64(bs))
+	numBytes := int(binary.BigEndian.Uint64(bs))
 
 	// Get the marshaled message from the connection
 	data := make([]byte, numBytes)
@@ -67,7 +67,7 @@ func SendMiniChordMessage(conn net.Conn, message *MiniChord) (err error) {
 
 	// First send the number of bytes in the marshaled message
 	bs := make([]byte, I64SIZE)
-	binary.BigEndian.PutUint64(bs, uint64(lengthWritten))
+	binary.BigEndian.PutUint64(bs, uint64(len(data)))
 	length, err := conn.Write(bs)
 	if err != nil {
 		log.Printf("SendMiniChordMessage() error: %s\n", err)
@@ -77,7 +77,7 @@ func SendMiniChordMessage(conn net.Conn, message *MiniChord) (err error) {
 	}
 
 	// Send the marshales message
-	length, err := conn.Write(data)
+	length, err = conn.Write(data)
 	if err != nil {
 		log.Printf("SendMiniChordMessage() error: %s\n", err)
 	}
