@@ -12,6 +12,8 @@ const I64SIZE = 8
 
 // ReceiveMiniChordMessage receives a protobuf marshaled message on
 // a connection conn and unmarshals it.
+// Make sure to call this function from only one go routine at a time.
+//
 func ReceiveMiniChordMessage(conn net.Conn) (message *MiniChord, err error) {
 	// First, get the number of bytes to received
 	bs := make([]byte, I64SIZE)
@@ -68,20 +70,15 @@ func SendMiniChordMessage(conn net.Conn, message *MiniChord) (err error) {
 	// First send the number of bytes in the marshaled message
 	bs := make([]byte, I64SIZE)
 	binary.BigEndian.PutUint64(bs, uint64(len(data)))
-	length, err := conn.Write(bs)
-	if err != nil {
-		log.Printf("SendMiniChordMessage() error: %s\n", err)
-	}
-	if length != I64SIZE {
-		log.Panicln("Short write?")
-	}
 
-	// Send the marshales message
-	length, err = conn.Write(data)
+	// We concatenate the two slices to use only one write.
+	message := append(bs, data...)
+
+	length, err := conn.Write(message)
 	if err != nil {
-		log.Printf("SendMiniChordMessage() error: %s\n", err)
+		log.Printf("SendMiniChordMessage(%v) error: %s\n", message, err)
 	}
-	if length != len(data) {
+	if length != len(message) {
 		log.Panicln("Short write?")
 	}
 	return

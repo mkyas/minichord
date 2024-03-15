@@ -2,4 +2,4 @@ module github.com/mkyas/minichord
 
 go 1.16
 
-require google.golang.org/protobuf v1.32.0 // indirect
+require google.golang.org/protobuf v1.32.0
