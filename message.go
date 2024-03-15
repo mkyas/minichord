@@ -72,13 +72,13 @@ func SendMiniChordMessage(conn net.Conn, message *MiniChord) (err error) {
 	binary.BigEndian.PutUint64(bs, uint64(len(data)))
 
 	// We concatenate the two slices to use only one write.
-	message := append(bs, data...)
+	msg := append(bs, data...)
 
-	length, err := conn.Write(message)
+	length, err := conn.Write(msg)
 	if err != nil {
 		log.Printf("SendMiniChordMessage(%v) error: %s\n", message, err)
 	}
-	if length != len(message) {
+	if length != len(msg) {
 		log.Panicln("Short write?")
 	}
 	return
