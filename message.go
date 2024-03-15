@@ -18,12 +18,12 @@ func ReceiveMiniChordMessage(conn net.Conn) (message *MiniChord, err error) {
 	length, err := conn.Read(bs)
 	if err != nil {
 		if err != io.EOF {
-			log.Printf("ReceivedMiniChordMessage() read error: %s\n", err)
+			log.Printf("ReceiveMiniChordMessage() read error: %s\n", err)
 		}
 		return
 	}
 	if length != I64SIZE {
-		log.Printf("ReceivedMiniChordMessage() length error: %d\n", length)
+		log.Printf("ReceiveMiniChordMessage() length error: %d\n", length)
 		return
 	}
 	numBytes := int(binary.BigEndian.Uint64(bs))
@@ -46,8 +46,8 @@ func ReceiveMiniChordMessage(conn net.Conn) (message *MiniChord, err error) {
 	message = &MiniChord{}
 	err = proto.Unmarshal(data[:length], message)
 	if err != nil {
-		log.Printf("ReceivedMiniChordMessage() unmarshal error: %s\n",
-			err)
+		log.Printf("ReceivedMiniChordMessage() cannot unmarshal %v, error: %s\n",
+			data, err)
 		return
 	}
 	log.Printf("ReceiveMiniChordMessage(): received %s (%v), %d from %s\n",
