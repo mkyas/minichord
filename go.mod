@@ -1,4 +1,4 @@
-module github.com/mkyas/minichord
+module github.com/almarbjornsson/minichord
 
 go 1.16
 

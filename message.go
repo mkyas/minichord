@@ -10,6 +10,22 @@ import (
 
 const I64SIZE = 8
 
+
+// LoggingEnabled controls whether logs should be printed.
+var LoggingEnabled = true
+
+// logf is a helper function that logs formatted output if LoggingEnabled is true.
+func logf(format string, v ...interface{}) {
+	if LoggingEnabled {
+		log.Printf(format, v...)
+	}
+}
+
+func UseLogging(enabled bool) {
+	LoggingEnabled = enabled
+}
+
+
 // ReceiveMiniChordMessage receives a protobuf marshaled message on
 // a connection conn and unmarshals it.
 // Make sure to call this function from only one go routine at a time.
@@ -52,8 +68,7 @@ func ReceiveMiniChordMessage(conn net.Conn) (message *MiniChord, err error) {
 			data, err)
 		return
 	}
-	log.Printf("ReceiveMiniChordMessage(): received %s (%v), %d from %s\n",
-		message, data[:length], length, conn.RemoteAddr().String())
+	logf("ReceiveMiniChordMessage(): received %s, %d from %s\n", message, length, conn.RemoteAddr().String())
 	return
 }
 
@@ -61,8 +76,7 @@ func ReceiveMiniChordMessage(conn net.Conn) (message *MiniChord, err error) {
 // a connection conn.
 func SendMiniChordMessage(conn net.Conn, message *MiniChord) (err error) {
 	data, err := proto.Marshal(message)
-	log.Printf("SendMiniChordMessage(): sending %s (%v), %d to %s\n",
-		message, data, len(data), conn.RemoteAddr().String())
+	logf("SendMiniChordMessage(): sending %s, %d to %s\n", message, len(data), conn.RemoteAddr().String())
 	if err != nil {
 		log.Panicln("Failed to marshal message.", err)
 	}
