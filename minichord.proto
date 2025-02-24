@@ -57,7 +57,7 @@ message RequestTrafficSummary {
 
 }
 
-message TrafficSummary {
+message ReportTrafficSummary {
 	sfixed32 Id = 2;
 	fixed32 Sent = 11;
 	fixed32 Relayed = 12;
@@ -78,6 +78,6 @@ message MiniChord {
 		NodeData nodeData = 15;
 		TaskFinished taskFinished = 24;
 		RequestTrafficSummary requestTrafficSummary = 25;
-		TrafficSummary reportTrafficSummary = 26;
+		ReportTrafficSummary reportTrafficSummary = 26;
 	}
 }
