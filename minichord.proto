@@ -32,7 +32,7 @@ message NodeRegistry {
 }
 
 message NodeRegistryResponse {
-    fixed32 Result = 2;
+    sfixed32 Result = 2;
     string Info = 3;
 }
 
